@@ -33,4 +33,5 @@ public final class MainService extends BaseMainService {
     protected BaseAndroidServerConfigFactory getServerConfigFactory(final Context context) {
         return new AndroidServerConfigFactory(context);
     }
+
 }

@@ -1,8 +1,12 @@
-package api.logic;
+package api.DTO;
+
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Arrays;
 
 /**
  * Represents JSON API Response.
@@ -27,18 +31,22 @@ public class APIResponse {
      * @param result
      * @throws JSONException
      */
-    public APIResponse(final int code, final String message, final JSONArray result) throws JSONException {
-        jsonObject.put(ATTR_STATUS, code);
-        jsonObject.put(ATTR_MESSAGE, message);
-        jsonObject.put(ATTR_RESULT, result);
+    public APIResponse(final int code, final String message, final JSONArray result){
+        try {
+            jsonObject.put(ATTR_STATUS, code);
+            jsonObject.put(ATTR_MESSAGE, message);
+            jsonObject.put(ATTR_RESULT, result);
+        }catch (JSONException jsonException){
+            Log.e("JSON", Arrays.toString(jsonException.getStackTrace()));
+        }
+
     }
 
     /**
      * Serializes API Response.
      *
-     * @throws JSONException
      */
-    public APIResponse() throws JSONException {
+    public APIResponse() {
         this(CODE_OK, MESSAGE_OK, null);
     }
 
@@ -49,7 +57,7 @@ public class APIResponse {
      * @param message
      * @throws JSONException
      */
-    public APIResponse(final int code, final String message) throws JSONException {
+    public APIResponse(final int code, final String message) {
         this(code, message, null);
     }
 

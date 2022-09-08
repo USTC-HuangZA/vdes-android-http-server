@@ -9,12 +9,17 @@
         android:layout_width="wrap_content">
         <ImageView android:layout_height="32px" android:id="@+id/ImageView01"
             android:layout_width="22px" android:gravity="center_vertical"></ImageView>
-        <TextView android:layout_toRightOf="@+id/ImageView01"
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:layout_toRightOf="@+id/ImageView01"
+            android:text="初始化中"
             android:textSize="32px"
-            android:layout_marginLeft="10px" android:layout_height="wrap_content"
-            android:id="@+id/TextView01" android:layout_width="wrap_content"
-            android:text="Initializing..." android:textStyle="bold"
-            android:layout_centerVertical="true"></TextView>
+            android:textStyle="bold"></TextView>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/RelativeLayout03" android:layout_marginTop="20px"
@@ -27,34 +32,48 @@
             android:autoLink="web" android:layout_centerHorizontal="true"></TextView>
     </RelativeLayout>
 
-    <Button android:layout_height="wrap_content" android:id="@+id/Button01"
-        android:text="..." android:layout_alignParentLeft="true"
-        android:layout_below="@+id/RelativeLayout03" android:layout_width="match_parent"
-        android:layout_marginBottom="40px"></Button>
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RelativeLayout03"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="40px"
+        android:text="..."></Button>
 
-    <Button android:layout_height="wrap_content"
-        android:layout_width="wrap_content" android:text="Grant permissions"
-        android:id="@+id/Button04" android:layout_alignParentLeft="true"
+    <Button
+        android:id="@+id/Button04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/Button01"
+        android:layout_alignParentLeft="true"
+        android:text="授予权限"
         android:visibility="gone"></Button>
 
-    <Button android:layout_height="wrap_content"
-        android:layout_width="wrap_content" android:text="Run in background"
-        android:id="@+id/Button02" android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Button01"></Button>
+    <Button
+        android:id="@+id/Button02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Button01"
+        android:layout_alignParentLeft="true"
+        android:text="后台运行"></Button>
 
-    <Button android:layout_height="wrap_content"
-        android:layout_width="wrap_content" android:text="Stop and exit"
-        android:id="@+id/Button03" android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/Button02" android:layout_below="@+id/Button01"></Button>
+    <Button
+        android:id="@+id/Button03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Button01"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/Button02"
+        android:text="暂停退出"></Button>
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/Button02"
         android:layout_alignLeft="@+id/Button02"
         android:layout_alignRight="@+id/Button03"
-        android:layout_below="@+id/Button02"
         android:fitsSystemWindows="true"
         android:lines="14"
         android:textAppearance="?android:attr/textAppearanceSmall"

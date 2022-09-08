@@ -38,4 +38,6 @@ dependencies {
     implementation project(path: ':http')
     implementation project(path: ':cli')
     implementation project(path: ':base')
+    implementation 'com.elvishew:xlog:1.10.1'
+    implementation 'com.android.volley:volley:1.2.1'
 }

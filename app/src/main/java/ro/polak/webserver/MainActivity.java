@@ -18,8 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elvishew.xlog.XLog;
+
+import java.util.Arrays;
 import java.util.Set;
 
+import configs.DataCenterConfig;
+import configs.LogConfig;
 import ro.polak.webserver.base.BaseMainActivity;
 import ro.polak.webserver.base.BaseMainService;
 import ro.polak.webserver.webserver.R;
@@ -65,7 +70,7 @@ public class MainActivity extends BaseMainActivity {
         requestPermissionsButton = findViewById(R.id.Button04);
         requestPermissionsButton.setOnClickListener(new ButtonListener(this));
 
-        status.setText("Initializing");
+        status.setText("初始化中");
     }
 
     /**
@@ -82,7 +87,7 @@ public class MainActivity extends BaseMainActivity {
      */
     @Override
     protected void doRequestPermissions() {
-        status.setText("Requesting permissions");
+        status.setText("请求权限");
         actionButton.setVisibility(View.GONE);
         backgroundButton.setVisibility(View.GONE);
         ipText.setVisibility(View.GONE);
@@ -93,7 +98,7 @@ public class MainActivity extends BaseMainActivity {
      */
     @Override
     protected void doShowMustAcceptPermissions() {
-        status.setText("Unable to initialize. Missing permissions.");
+        status.setText("无法初始化，缺少权限");
         requestPermissionsButton.setVisibility(View.VISIBLE);
     }
 
@@ -103,9 +108,9 @@ public class MainActivity extends BaseMainActivity {
     @Override
     protected void doNotifyStateChangedToOffline() {
         imgView.setImageResource(R.drawable.offline);
-        status.setText("Server offline");
+        status.setText("服务下线");
         actionButton.setVisibility(View.VISIBLE);
-        actionButton.setText("Start HTTPD");
+        actionButton.setText("服务启动");
     }
 
     /**
@@ -117,22 +122,32 @@ public class MainActivity extends BaseMainActivity {
 
         imgView.setImageResource(R.drawable.online);
         actionButton.setVisibility(View.VISIBLE);
-        actionButton.setText("Stop HTTPD");
-        status.setText("Server online");
+        actionButton.setText("停止服务");
+        status.setText("服务在线");
     }
 
     /**
-     * {@inheritDoc}
+     * 打印日志，同时限制长度
      */
     @Override
-    protected void println(final String text) {
+    public void println(final String text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    consoleText.setText(text + "\n" + consoleText.getText());
+                    String newText = text + "\n" + consoleText.getText();
+                    String[] splitText = newText.split("\n");
+                    if(splitText.length > LogConfig.MAX_PRINT_LINES){
+                        splitText = Arrays.copyOfRange(splitText, splitText.length - LogConfig.MAX_PRINT_LINES, splitText.length);
+                    }
+                    consoleText.setText(String.join("\n", splitText));
+                    if(LogConfig.LoggerInitDone){
+                        XLog.i(text);
+                    }else {
+                        Log.i("OK", text);
+                    }
                 } catch (Exception e) {
-                    Log.i("HTTP", text);
+                    Log.i("ERROR", text);
                 }
             }
         });
@@ -154,8 +169,9 @@ public class MainActivity extends BaseMainActivity {
     @NonNull
     protected Set<String> getRequiredPermissions() {
         Set<String> permissions = super.getRequiredPermissions();
-        permissions.add(Manifest.permission.READ_SMS);
-        permissions.add(Manifest.permission.SEND_SMS);
+//      Other permissions
+//      permissions.add(Manifest.permission.READ_SMS);
+//      permissions.add(Manifest.permission.SEND_SMS);
 
         return permissions;
     }
@@ -165,10 +181,17 @@ public class MainActivity extends BaseMainActivity {
      */
     private class ButtonListener implements View.OnClickListener {
 
-        private BaseMainActivity activity;
+        private MainActivity activity;
 
-        ButtonListener(final BaseMainActivity activity) {
+        ButtonListener(final MainActivity activity) {
             this.activity = activity;
+        }
+
+        private void serviceInit(){
+            //启动服务的时候把logger初始化
+            LogConfig.LoggerInit(getApplicationContext());
+            println("logger init done");
+            DataCenterConfig.singletonInit(getApplicationContext(), activity);
         }
 
         public void onClick(final View v) {
@@ -182,19 +205,19 @@ public class MainActivity extends BaseMainActivity {
                 return;
             } else if (id == quitButton.getId()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure you want to exit?")
+                builder.setMessage("确定退出?")
                         .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
                                 if (isMainServiceBound()) {
                                     requestServiceStop();
                                 } else {
                                     Toast.makeText(getApplicationContext(),
-                                            "Background service not bound!", Toast.LENGTH_SHORT).show();
+                                            "后台服务未绑定", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
                                 dialog.cancel();
                             }
@@ -202,15 +225,18 @@ public class MainActivity extends BaseMainActivity {
                 builder.create().show();
 
             } else if (id == actionButton.getId()) {
+                serviceInit();
                 if (isMainServiceBound()) {
                     if (getMainService().getServiceState().isWebServerStarted()) {
                         getMainService().getController().stop();
+                        XLog.i("service end");
                     } else {
                         getMainService().getController().start();
+                        XLog.i("service start");
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "Background service not bound!", Toast.LENGTH_SHORT).show();
+                            "后台服务未绑定", Toast.LENGTH_SHORT).show();
                 }
             }
         }

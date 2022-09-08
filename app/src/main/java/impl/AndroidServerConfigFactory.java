@@ -11,16 +11,7 @@ import android.content.Context;
 
 import java.util.regex.Pattern;
 
-import admin.DriveAccessServlet;
-import admin.GetFileServlet;
-import admin.IndexServlet;
-import admin.LoginServlet;
-import admin.LogoutServlet;
-import admin.ServerStatsServlet;
-import admin.filter.LogoutFilter;
-import admin.filter.SecurityFilter;
-import api.SmsInboxServlet;
-import api.SmsSendServlet;
+import api.AISUploadServlet;
 import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.session.storage.SessionStorage;
@@ -46,60 +37,56 @@ public class AndroidServerConfigFactory extends BaseAndroidServerConfigFactory {
                                                                          final ServerConfig serverConfig) {
         return super.getDeploymentDescriptorBuilder(sessionStorage, serverConfig)
                 .addServletContext()
-                    .withContextPath("/api/1.0")
+                    .withContextPath("/ais")
                     .addServlet()
-                        .withUrlPattern(Pattern.compile("^/sms/inbox"))
-                        .withServletClass(SmsInboxServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/sms/send"))
-                        .withServletClass(SmsSendServlet.class)
-                    .end()
-                .end()
-
-                .addServletContext()
-                    .withContextPath("/admin")
-                    .addFilter()
-                        .withUrlPattern(Pattern.compile("^.*$"))
-                        .withUrlExcludedPattern(Pattern.compile("^/(?:Login|Logout)"))
-                        .withFilterClass(SecurityFilter.class)
-                    .end()
-                    .addFilter()
-                        .withUrlPattern(Pattern.compile("^/Logout$"))
-                        .withFilterClass(LogoutFilter.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/DriveAccess$"))
-                        .withServletClass(DriveAccessServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/GetFile$"))
-                        .withServletClass(GetFileServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/Index$"))
-                        .withServletClass(IndexServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/$"))
-                        .withServletClass(IndexServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/Login$"))
-                        .withServletClass(LoginServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/Logout$"))
-                        .withServletClass(LogoutServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/ServerStats$"))
-                        .withServletClass(ServerStatsServlet.class)
-                    .end()
-                    .addServlet()
-                        .withUrlPattern(Pattern.compile("^/SmsInbox$"))
-                        .withServletClass(admin.SmsInboxServlet.class)
+                        .withUrlPattern(Pattern.compile("^/upload"))
+                        .withServletClass(AISUploadServlet.class)
                     .end()
                 .end();
+
+//                .addServletContext()
+//                    .withContextPath("/admin")
+//                    .addFilter()
+//                        .withUrlPattern(Pattern.compile("^.*$"))
+//                        .withUrlExcludedPattern(Pattern.compile("^/(?:Login|Logout)"))
+//                        .withFilterClass(SecurityFilter.class)
+//                    .end()
+//                    .addFilter()
+//                        .withUrlPattern(Pattern.compile("^/Logout$"))
+//                        .withFilterClass(LogoutFilter.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/DriveAccess$"))
+//                        .withServletClass(DriveAccessServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/GetFile$"))
+//                        .withServletClass(GetFileServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/Index$"))
+//                        .withServletClass(IndexServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/$"))
+//                        .withServletClass(IndexServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/Login$"))
+//                        .withServletClass(LoginServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/Logout$"))
+//                        .withServletClass(LogoutServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/ServerStats$"))
+//                        .withServletClass(ServerStatsServlet.class)
+//                    .end()
+//                    .addServlet()
+//                        .withUrlPattern(Pattern.compile("^/SmsInbox$"))
+//                        .withServletClass(admin.SmsInboxServlet.class)
+//                    .end()
+//                .end();
     }
 }

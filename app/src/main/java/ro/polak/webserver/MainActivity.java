@@ -46,6 +46,12 @@ public class MainActivity extends BaseMainActivity {
     private Button quitButton;
     private ImageView imgView;
 
+    private void serviceInit(){
+        //启动服务的时候把logger初始化
+        LogConfig.LoggerInit(getApplicationContext());
+        println("logger init done");
+        DataCenterConfig.singletonInit(getApplicationContext(), this);
+    }
     /**
      * {@inheritDoc}
      */
@@ -70,7 +76,9 @@ public class MainActivity extends BaseMainActivity {
         requestPermissionsButton = findViewById(R.id.Button04);
         requestPermissionsButton.setOnClickListener(new ButtonListener(this));
 
+        serviceInit();
         status.setText("初始化中");
+
     }
 
     /**
@@ -187,13 +195,6 @@ public class MainActivity extends BaseMainActivity {
             this.activity = activity;
         }
 
-        private void serviceInit(){
-            //启动服务的时候把logger初始化
-            LogConfig.LoggerInit(getApplicationContext());
-            println("logger init done");
-            DataCenterConfig.singletonInit(getApplicationContext(), activity);
-        }
-
         public void onClick(final View v) {
             int id = v.getId();
 
@@ -225,7 +226,6 @@ public class MainActivity extends BaseMainActivity {
                 builder.create().show();
 
             } else if (id == actionButton.getId()) {
-                serviceInit();
                 if (isMainServiceBound()) {
                     if (getMainService().getServiceState().isWebServerStarted()) {
                         getMainService().getController().stop();

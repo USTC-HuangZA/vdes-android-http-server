@@ -13,16 +13,23 @@ import com.elvishew.xlog.printer.file.FilePrinter;
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy;
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class LogConfig{
     public static final int MAX_PRINT_LINES = 100;
     public static boolean LoggerInitDone = false;
+//    static final String LOGGERPATH = "/storage/emulated/0/AIS/log";
     public static void LoggerInit(Context context){
+        Log.i("LOGGER PATH:", (context.getExternalFilesDir("log").getAbsolutePath()));
         if(!LoggerInitDone){
             try {
+//                File file = new File(LOGGERPATH);
+//                if(!file.exists()){
+//                    file.mkdirs();
+//                }
                 Printer filePrinter = new FilePrinter                      // 打印日志到文件的打印器
-                        .Builder(context.getExternalCacheDir().getAbsolutePath())                             // 指定保存日志文件的路径
+                        .Builder(context.getExternalFilesDir("log").getAbsolutePath())                             // 指定保存日志文件的路径
                         .fileNameGenerator(new DateFileNameGenerator())        // 指定日志文件名生成器，默认为 ChangelessFileNameGenerator("log")
                         .build();
                 XLog.init(LogLevel.ALL, filePrinter);

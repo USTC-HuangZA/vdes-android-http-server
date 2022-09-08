@@ -127,10 +127,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         if (isMainServiceBound) {
             BaseMainService.ServiceStateDTO serviceStateDTO = mainService.getServiceState();
             if (serviceStateDTO.isWebServerStarted()) {
-                println("Starging HTTPD");
+                println("开始服务");
                 doNotifyStateChangedToOnline(serviceStateDTO);
             } else {
-                println("Stopping HTTPD");
+                println("停止服务　");
                 doNotifyStateChangedToOffline();
             }
         }
